@@ -1,47 +1,38 @@
 require "rake"
+require "rspec/core/rake_task"
 
 $LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require "admin-vmc-plugin/version"
 
+RSpec::Core::RakeTask.new(:spec)
 task :default => :spec
 
-desc "Run specs"
-task :spec => ["bundler:install", "test:spec"]
-
-desc "Run integration tests"
-task :test => ["bundler:install", "test:integration"]
-
-task :build do
-  sh "gem build admin-vmc-plugin.gemspec"
-end
-
-task :install => :build do
-  sh "gem install --local admin-vmc-plugin-#{VMCAdmin::VERSION}.gem"
-end
-
-task :uninstall do
-  sh "gem uninstall admin-vmc-plugin"
-end
-
-task :reinstall => [:uninstall, :install]
-
-task :release => :build do
-  sh "gem push admin-vmc-plugin-#{VMCAdmin::VERSION}.gem"
-end
-
-namespace "bundler" do
-  desc "Install gems"
-  task "install" do
-    sh("bundle install")
-  end
-end
-
-namespace "test" do
-  task "spec" do |t|
-    # nothing
+namespace :deploy do
+  def last_staging_sha
+    `git rev-parse latest-staging`.strip
   end
 
-  task "integration" do |t|
-    sh("cd spec && bundle exec rake spec")
+  def last_release_sha
+    `git rev-parse latest-release`.strip
+  end
+
+  def last_staging_ref_was_released?
+    last_staging_sha == last_release_sha
+  end
+
+  task :staging, :version do |_, args|
+    sh "gem bump --push #{"--version #{args.version}" if args.version}" if last_staging_ref_was_released?
+    sh "git tag -f latest-staging"
+    sh "git push origin :latest-staging"
+    sh "git push origin latest-staging"
+  end
+
+  task :gem do
+    sh "git fetch"
+    sh "git checkout #{last_staging_sha}"
+    sh "gem release --tag"
+    sh "git tag -f latest-release"
+    sh "git push origin :latest-release"
+    sh "git push origin latest-release"
   end
 end
