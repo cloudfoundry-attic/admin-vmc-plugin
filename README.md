@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/cloudfoundry/admin-vmc-plugin.png)](https://travis-ci.org/cloudfoundry/admin-vmc-plugin)
 
+## Admin
 ### Info
 This plugin allows you to make manual HTTP requests to the Cloud Foundry REST API.
 
