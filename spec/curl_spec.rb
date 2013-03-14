@@ -1,7 +1,8 @@
 require "spec_helper"
 
 describe VMCAdmin::Curl do
-  use_fake_home_dir { "#{SPEC_ROOT}/fixtures/fake_home_dir" }
+  let(:fake_home_dir) { "#{SPEC_ROOT}/fixtures/fake_home_dir" }
+  stub_home_dir_with { fake_home_dir }
 
   subject { vmc ["curl", "--mode", "GET", "--path", path] }
 

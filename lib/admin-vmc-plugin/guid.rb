@@ -48,7 +48,7 @@ module VMCAdmin
 
     def puts_response(body)
       # passing nil to load causes segfault
-      hash = MultiJson.load(body || "") rescue {}
+      hash = MultiJson.load(body || "{}") rescue {}
 
       puts_pagination(*hash.values_at("total_results", "total_pages"))
       puts_resources(hash["resources"])
