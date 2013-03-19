@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/cloudfoundry/admin-vmc-plugin.png)](https://travis-ci.org/cloudfoundry/admin-vmc-plugin)
 
+## Deprecated
+VMC and its plugins have been renamed. You can find the current version of the code for this gem at
+http://github.com/cloudfoundry/admin-cf-plugin
+
 ## Admin
 ### Info
 This plugin allows you to make manual HTTP requests to the Cloud Foundry REST API.
